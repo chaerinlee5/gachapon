@@ -1,19 +1,14 @@
-import { supabase } from "../lib/supbase";
+import LoginButton from "../components/LoginButton";
 
-function LoginButton() {
-  const handleLogin = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: window.location.origin },
-    });
-    if (error) console.error("Login error:", error.message);
-  };
-
+function LoginPage() {
   return (
-    <button onClick={handleLogin} className="px-4 py-2 bg-indigo-600 text-white rounded">
-      Sign in with Google
-    </button>
+    <div className="flex h-screen items-center justify-center bg-gray-50">
+      <div className="p-8 bg-white shadow rounded-lg">
+        <h1 className="text-2xl font-bold mb-6 text-center">Sign in to Gachapon</h1>
+        <LoginButton />
+      </div>
+    </div>
   );
 }
 
-export default LoginButton;
+export default LoginPage;
