@@ -3,7 +3,7 @@ import { supabase } from "../lib/supabase";
 export default function LogoutButton() {
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    window.location.href = "/"; 
+    window.location.href = "/login"; 
   };
   return (
     <button className="px-3 py-2 rounded-xl border hover:bg-gray-50" onClick={handleLogout}>
