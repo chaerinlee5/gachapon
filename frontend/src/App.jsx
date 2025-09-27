@@ -12,7 +12,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white shadow">
-        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-4">
           <Link to="/" className="font-semibold">Gachapon</Link>
           <nav className="flex gap-2 mr-auto">
             <NavLink to="/feed" className={active}>Feed</NavLink>
@@ -21,7 +21,7 @@ export default function App() {
 
           {user ? (
             <div className="flex items-center gap-3">
-              <span className="text-sm">
+              <span className="text-blue-400 text-xl">
                 {user.user_metadata?.full_name || user.email}
               </span>
               <LogoutButton />
@@ -32,9 +32,10 @@ export default function App() {
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-4 py-6">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <AppRoutes />
       </main>
+
     </div>
   );
 }
