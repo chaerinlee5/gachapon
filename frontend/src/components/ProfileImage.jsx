@@ -72,8 +72,8 @@ const ProfileImage = () => {
 
       {/* Popup Modal */}
       {showPopup && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/40 bg-opacity-40">
-          <div className="bg-white p-6 rounded-lg shadow-lg">
+        <div className="fixed inset-0 flex items-center justify-center bg-black/40 bg-opacity-40 z-[1000]">
+          <div className="bg-white p-6 rounded-lg shadow-lg z-[1001]">
             <h2 className="text-lg font-semibold mb-4">Choose your avatar</h2>
             <div className="grid grid-cols-4 gap-4">
               {profileOptions.map((filename) => (
