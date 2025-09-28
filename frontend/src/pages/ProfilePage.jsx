@@ -1,11 +1,14 @@
-import LogoutButton from "../components/LogoutButton"
+import LogoutButton from "../components/LogoutButton";
+import ProfileImage from "../components/ProfileImage";
+
 const ProfilePage = () => {
   return (
-    <div>
-      <h1 className="text-2xl font-bold p-4 py-15">Profile</h1>
-      <LogoutButton/>
+    <div className="p-4">
+      <h1 className="text-2xl font-bold mb-4">Profile</h1>
+      <ProfileImage />
+      <LogoutButton />
     </div>
-  )
-}
+  );
+};
 
 export default ProfilePage;
