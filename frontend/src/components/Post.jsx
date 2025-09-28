@@ -84,7 +84,7 @@ const Post = ({ post }) => {
         />
       )}
 
-      <div className="bg-white shadow rounded-lg overflow-hidden">
+      <div className="bg-white shadow overflow-hidden">
         <div className="flex items-center gap-3 p-4">
           <img
             src={a.profile_pic_url ? `/images/${a.profile_pic_url}` : "/images/profile1.png"}
