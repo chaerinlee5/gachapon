@@ -31,7 +31,7 @@ export default function FeedPage() {
   }, []);
 
   return (
-    <div className="max-w-xl mx-auto">
+    <div className="max-w-xl mt-5 mx-auto">
       {posts.length ? posts.map(p => <Post key={p.id} post={p} />)
                     : <p className="text-center text-gray-500 mt-10">No posts yet.</p>}
     </div>
