@@ -3,6 +3,7 @@ import AppRoutes from "./routes";
 import { useAuth } from "./lib/useAuth";
 import { supabase } from "./lib/supabase";
 import { useEffect, useState } from "react";
+import logo from "./assets/gachaponLogo.png"
 
 function AppWrapper() {
   const { user, loading } = useAuth();
@@ -53,8 +54,13 @@ export default function App() {
           <div className="max-w mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
             {/* Centered title */}
             <div className="flex-1 flex justify-center">
-              <Link to="/feed" className="text-lg font-semibold">
-                gachapon
+              <Link to="/feed" className="flex items-center gap-2">
+                <img
+                  src={logo}
+                  alt="Gachapon Logo"
+                  className="h-8 w-auto object-contain"
+                />
+                <span className="text-lg font-semibold">gachapon</span>
               </Link>
             </div>
 
@@ -63,14 +69,14 @@ export default function App() {
               <Link to="/profile" className="absolute right-4">
                 <img
                   src={
-                  profile?.profile_pic_url
-                  ? `/images/${profile.profile_pic_url}`
-                  : "/images/profile1.png"
-                }
-                alt={profile?.display_name || "Profile"}
-                className="w-10 h-10 rounded-full shadow-md object-cover hover:opacity-80 transition"
-                onError={(e) => (e.currentTarget.src = "/images/profile1.png")}
-              />
+                    profile?.profile_pic_url
+                      ? `/images/${profile.profile_pic_url}`
+                      : "/images/profile1.png"
+                  }
+                  alt={profile?.display_name || "Profile"}
+                  className="w-10 h-10 rounded-full shadow-md object-cover hover:opacity-80 transition"
+                  onError={(e) => (e.currentTarget.src = "/images/profile1.png")}
+                />
               </Link>
             )}
           </div>
