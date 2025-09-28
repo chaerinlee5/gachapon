@@ -4,7 +4,6 @@ import FeedPage from "./pages/FeedPage";
 import ProfilePage from "./pages/ProfilePage";
 import LoginPage from "./pages/LoginPage";
 import Wishlist from "./pages/Wishlist";
-// import WishlistTrial from "./pages/WishlistTrial"
 
 function Protected({ children }) {
   const { user, loading } = useAuth();
@@ -21,6 +20,9 @@ function PublicOnly({ children }) {
 export default function AppRoutes() {
   return (
     <Routes>
+      {/* ✅ Redirect root to /login */}
+      <Route path="/" element={<Navigate to="/login" replace />} />
+
       <Route
         path="/feed"
         element={
@@ -53,15 +55,9 @@ export default function AppRoutes() {
           </Protected>
         }
       />
-      {/* <Route
-        path="/wishlisttrial"
-        element={
-          <Protected>
-            <WishlistTrial />
-          </Protected>
-        }
-      /> */}
 
+      {/* Catch-all: any bad route -> /login */}
+      <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );
 }
