@@ -15,7 +15,7 @@ export default function AddToCollection({ isOpen, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-[999]">
       <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
         {/* Header */}
         <div className="flex justify-between items-center mb-4">
