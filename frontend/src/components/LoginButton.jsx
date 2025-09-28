@@ -2,15 +2,16 @@ import { supabase } from "../lib/supabase";
 
 export default function LoginButton() {
     const handleLogin = async () => {
-        const baseUrl = import.meta.env.BASE_URL; // "/gachapon/" in production
-        const redirectUrl = `${window.location.origin}${import.meta.env.BASE_URL}feed`;
-
+        // Get the correct base URL including the /gachapon/ path
+        const baseUrl = import.meta.env.BASE_URL; // "/gachapon/" in production, "/" in dev
+        const redirectUrl = `${window.location.origin}${baseUrl}`;
+        
         console.log('Redirecting to:', redirectUrl);
-
+        
         const { error } = await supabase.auth.signInWithOAuth({
             provider: "google",
             options: {
-                redirectTo: redirectUrl,
+                redirectTo: redirectUrl, // This will be https://username.github.io/gachapon/
             },
         });
 

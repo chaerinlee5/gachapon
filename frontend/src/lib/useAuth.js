@@ -6,7 +6,7 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Get current session on mount
+    // Get current session (not just user) on mount
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
       setLoading(false);
@@ -15,14 +15,15 @@ export function useAuth() {
     // Subscribe to auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
-        console.log('Auth event:', event, 'User:', session?.user ? 'Present' : 'None');
+        console.log('Auth event:', event, 'Session:', session?.user ? 'Present' : 'None');
         setUser(session?.user ?? null);
         setLoading(false);
 
-        if (event === "SIGNED_IN") {
-          console.log('User signed in successfully!');
-          // Profile should be auto-created by database trigger
-          // No need to manually call ensureProfileRow anymore
+        // Handle successful login
+        if (event === "SIGNED_IN" && session?.user) {
+          // Don't manipulate history here - let React Router handle it
+          // The PublicOnly component will redirect to /feed automatically
+          console.log('User signed in, letting router handle redirect');
         }
       }
     );
