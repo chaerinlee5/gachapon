@@ -34,8 +34,8 @@ export default function ProfilePage() {
       <div className="mx-auto max-w-6xl mt-5 px-4 pb-5">
         <div className="relative">
           {/* Left sidebar */}
-          <aside className="absolute left-4 top-6 flex flex-col items-center gap-5 z-10">
-            {/* 👇 this now uses the ProfileImage component for change-avatar */}
+          <aside className="absolute left-4 top-6 flex flex-col items-center gap-5 z-50">
+            {/* Profile avatar with change functionality */}
             <ProfileImage />
 
             {/* Add to collection button */}
@@ -57,8 +57,9 @@ export default function ProfilePage() {
             <LogoutButton />
           </aside>
 
+          {/* Page title */}
           <div className="relative w-full max-w-4xl mx-auto mt-2">
-            <h2 className="text-center text-xl md:text-2xl font-semibold z-10">
+            <h2 className="text-center text-xl md:text-2xl font-semibold z-30">
               user’s collection
             </h2>
 
@@ -67,7 +68,6 @@ export default function ProfilePage() {
               alt="stars"
               className="absolute left-65 top-1/2 -translate-y-1/2 h-[150px]"
             />
-
             <img
               src="/images/Star frog.png"
               alt="frog"
