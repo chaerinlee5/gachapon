@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "./supabase";
+import { supabase, ensureProfileRow } from "./supabase";
 
 export function useAuth() {
   const [user, setUser] = useState(null);
@@ -14,16 +14,15 @@ export function useAuth() {
 
     // Subscribe to auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        console.log('Auth event:', event, 'Session:', session?.user ? 'Present' : 'None');
+      async (event, session) => {
+        console.log("Auth event:", event, "Session:", session?.user ? "Present" : "None");
         setUser(session?.user ?? null);
         setLoading(false);
 
-        // Handle successful login
+        // Create profile row right after login
         if (event === "SIGNED_IN" && session?.user) {
-          // Don't manipulate history here - let React Router handle it
-          // The PublicOnly component will redirect to /feed automatically
-          console.log('User signed in, letting router handle redirect');
+          await ensureProfileRow();
+          console.log("Profile row ensured for user:", session.user.id);
         }
       }
     );
