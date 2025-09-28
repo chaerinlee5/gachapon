@@ -6,25 +6,28 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // get current user once on mount
-    supabase.auth.getUser().then(({ data }) => {
-      setUser(data?.user ?? null);
+    // Get current session (not just user) on mount
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
       setLoading(false);
     });
 
-    // subscribe to auth changes
+    // Subscribe to auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        console.log('Auth event:', event, 'Session:', session?.user ? 'Present' : 'None');
         setUser(session?.user ?? null);
+        setLoading(false);
 
-        // ✅ clean URL after login (removes #access_token from hash)
-        if (event === "SIGNED_IN") {
-          window.history.replaceState({}, document.title, window.location.pathname);
+        // Handle successful login
+        if (event === "SIGNED_IN" && session?.user) {
+          // Don't manipulate history here - let React Router handle it
+          // The PublicOnly component will redirect to /feed automatically
+          console.log('User signed in, letting router handle redirect');
         }
       }
     );
 
-    // cleanup subscription on unmount
     return () => subscription.unsubscribe();
   }, []);
 

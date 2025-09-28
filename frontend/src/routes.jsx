@@ -7,9 +7,21 @@ import Wishlist from "./pages/Wishlist";
 
 function Protected({ children }) {
   const { user, loading } = useAuth();
-  if (loading) return <div className="p-6">Loading…</div>;
-  return user ? children : <Navigate to="/login" replace />;
+
+  console.log(user)
+
+  // ✅ Don't redirect until we know for sure
+  if (loading) {
+    return <div className="p-6">Loading…</div>;
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
 }
+
 
 function PublicOnly({ children }) {
   const { user, loading } = useAuth();
@@ -20,7 +32,7 @@ function PublicOnly({ children }) {
 export default function AppRoutes() {
   return (
     <Routes>
-      {/* ✅ Redirect root to /login */}
+      {/* ✅ Redirect root to /login (basename handles /gachapon/) */}
       <Route path="/" element={<Navigate to="/login" replace />} />
 
       <Route
