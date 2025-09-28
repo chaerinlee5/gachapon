@@ -51,7 +51,6 @@ const CreatePost = ({ onClose, onPostCreated }) => {
         if (insertError) {
             console.error("Error inserting post:", insertError.message);
         } else {
-            // ✅ refresh feed and close popup
             onPostCreated?.();
             onClose?.();
         }
@@ -86,7 +85,6 @@ const CreatePost = ({ onClose, onPostCreated }) => {
                 </div>
 
                 <form id="create-post-form" onSubmit={handleSubmit} className="p-4 space-y-4">
-                    {/* Custom file upload */}
                     <label
                         htmlFor="file-upload"
                         className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-100 hover:bg-gray-200 transition"
@@ -112,10 +110,9 @@ const CreatePost = ({ onClose, onPostCreated }) => {
                         />
                     </label>
 
-                    {/* Caption input */}
                     <textarea
                         className="w-full p-2 border border-gray-200 rounded"
-                        rows={2}
+                        rows={1}
                         value={body}
                         onChange={(e) => setBody(e.target.value)}
                         placeholder="add caption..."

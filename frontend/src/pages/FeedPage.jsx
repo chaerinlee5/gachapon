@@ -10,7 +10,6 @@ export default function FeedPage() {
   const [posts, setPosts] = useState([]);
   const [showCreatePost, setShowCreatePost] = useState(false);
 
-  // ✅ move fetch into its own function so we can reuse it
   const fetchPosts = async () => {
     const { data, error } = await supabase
       .from("posts")
@@ -40,7 +39,6 @@ export default function FeedPage() {
 
   return (
     <div className="relative">
-      {/* Left rail (fixed) */}
       <img
         src={leftFeed}
         alt=""
@@ -56,7 +54,6 @@ export default function FeedPage() {
         "
       />
 
-      {/* Right rail (fixed) */}
       <img
         src={rightFeed}
         alt=""
@@ -72,7 +69,6 @@ export default function FeedPage() {
         "
       />
 
-      {/* Center feed (scrolls) */}
       <div className="relative z-10 max-w-xl mt-5 mx-auto px-4">
         {posts.length ? (
           posts.map((p) => <Post key={p.id} post={p} />)
@@ -81,9 +77,8 @@ export default function FeedPage() {
         )}
       </div>
 
-      {/* Add Post button */}
       <button
-        className="fixed bottom-6 right-6 z-20
+        className="fixed bottom-6 right-90 z-20
              bg-gray-400 hover:bg-gray-500 text-white
              rounded-full p-4 shadow-lg transition
              focus:outline-none focus:ring-2 focus:ring-gray-300"
@@ -97,7 +92,7 @@ export default function FeedPage() {
       {showCreatePost && (
         <CreatePost
           onClose={() => setShowCreatePost(false)}
-          onPostCreated={fetchPosts}   // 👈 add this
+          onPostCreated={fetchPosts}
         />
       )}
 
