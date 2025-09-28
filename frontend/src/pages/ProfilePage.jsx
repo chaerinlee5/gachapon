@@ -64,7 +64,7 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-[#F3F4F6] text-gray-900">
-      <div className="mx-auto max-w-6xl mt-5 px-4 pb-5">
+      <div className="mx-auto max-w-6xl px-4 pb-5">
         <div className="relative">
           {/* Left sidebar */}
           <aside className="absolute left-4 top-6 flex flex-col items-center gap-5 z-30">
@@ -98,7 +98,7 @@ export default function ProfilePage() {
           </aside>
 
           {/* Page title with stickers */}
-          <div className="relative w-full max-w-4xl mx-auto mt-2 z-40">
+          <div className="relative w-full max-w-4xl mx-auto z-40">
             <div className="flex items-center justify-center gap-1">
               {/* Left sticker */}
               <img
@@ -122,7 +122,7 @@ export default function ProfilePage() {
           </div>
 
           {/* Shelf area */}
-          <div className="relative z-0 -mt-38 flex justify-center">
+          <div className="relative z-0 -mt-48 flex justify-center">
             <img
               src="/images/Shelf.png"
               alt="wooden shelf"
@@ -140,7 +140,7 @@ export default function ProfilePage() {
             />
 
             {/* Items grid overlay */}
-            <div className="absolute inset-0 px-56 py-64 grid grid-cols-4">
+            <div className="absolute inset-0 px-56 py-70 grid grid-cols-4">
               {collectionItems.map((c) => {
                 const item = c.item;
                 const key = item.image_key.replace(".png", "");
