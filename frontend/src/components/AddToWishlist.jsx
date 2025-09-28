@@ -48,7 +48,6 @@ export default function AddToWishlist({ isOpen, onClose }) {
             item_id: parseInt(figure), // force int
         };
 
-        console.log("Inserting payload:", payload);
 
         const { data, error } = await supabase
             .from("user_items_wishlist")
@@ -58,7 +57,7 @@ export default function AddToWishlist({ isOpen, onClose }) {
         if (error) {
             console.error("Insert error:", error);
         } else {
-            console.log("Inserted successfully:", data);
+            // console.log("Inserted successfully:", data);
             onClose();
         }
     };

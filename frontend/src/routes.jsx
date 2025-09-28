@@ -8,8 +8,6 @@ import Wishlist from "./pages/Wishlist";
 function Protected({ children }) {
   const { user, loading } = useAuth();
 
-  console.log(user)
-
   // ✅ Don't redirect until we know for sure
   if (loading) {
     return <div className="p-6">Loading…</div>;

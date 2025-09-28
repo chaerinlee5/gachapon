@@ -12,26 +12,33 @@ export const supabase = createClient(
     },
   }
 );
+
 export async function ensureProfileRow() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return;
 
+  // already exists? do nothing
+  const { data: existing, error: selErr } = await supabase
+    .from("profiles")
+    .select("id")
+    .eq("id", user.id)
+    .single();
+
+  // ignore "no rows" error; anything else is real
+  if (selErr && selErr.code !== "PGRST116") {
+    console.error("profiles select error:", selErr.message);
+    return;
+  }
+  if (existing) return;
+
+  // insert only id + display_name (let DB default fill profile_pic_url)
   const meta = user.user_metadata || {};
   const displayName =
     meta.full_name || meta.name || user.email?.split("@")[0] || "New User";
-  const avatar = meta.avatar_url || meta.picture || null;
 
-  const { error } = await supabase
+  const { error: insErr } = await supabase
     .from("profiles")
-    .upsert(
-      {
-        id: user.id,
-        display_name: displayName,
-        profile_pic_url: avatar,
-      },
-      { onConflict: "id" }
-    )
-    .throwOnError();
+    .insert({ id: user.id, display_name: displayName });
 
-  if (error) console.error("Upsert failed:", error.message);
+  if (insErr) console.error("profiles insert error:", insErr.message);
 }

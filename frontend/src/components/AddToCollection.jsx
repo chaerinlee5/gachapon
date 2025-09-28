@@ -48,8 +48,6 @@ export default function AddToCollection({ isOpen, onClose }) {
       for_trade: false           // add this if table requires it
     };
 
-    console.log("Inserting:", payload);
-
     const { data, error } = await supabase
       .from("user_items")        // 👈 use the right table
       .insert([payload]);
@@ -57,7 +55,6 @@ export default function AddToCollection({ isOpen, onClose }) {
     if (error) {
       console.error("Error inserting:", error.message);
     } else {
-      console.log("Added to collection:", data);
       onClose();
     }
   };

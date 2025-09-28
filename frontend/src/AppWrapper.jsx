@@ -15,7 +15,7 @@ export function AppWrapper() {
 
     if (user) {
       // 🔹 ensure row exists for new users
-      ensureProfileRow();
+      // ensureProfileRow();
 
       if (location.pathname === "/login") {
         navigate("/feed", { replace: true });
