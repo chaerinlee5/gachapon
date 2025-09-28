@@ -28,7 +28,7 @@ export default function AddToCollection({ isOpen, onClose }) {
           <h2 className="text-lg font-semibold">add to collection</h2>
           <button
             onClick={handleSubmit}
-            className="text-3xl font-bold text-black-600 hover:text-green-800"
+            className="text-xl font-bold text-black-600 hover:text-green-800"
           >
             ╋
           </button>
