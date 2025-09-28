@@ -1,7 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../lib/useAuth";
 
 export default function Wishlist() {
+    const { user } = useAuth(); 
     return (
         <div className="min-h-screen bg-[#F3F4F6] text-gray-900">
 
@@ -12,9 +14,9 @@ export default function Wishlist() {
                     {/* Left sidebar */}
                     <aside className="absolute -left-10 top-6 hidden md:flex md:flex-col md:items-center gap-5">
                         <img
-                            src={`/images/${user.profile_pic_url || "profile1.png"}`}
+                            src={`/images/${user?.profile_pic_url || "profile1.png"}`}
                             alt="Profile"
-                            className="w-8 h-8 rounded-full"
+                            className="w-24 h-24 rounded-full"
                             onError={(e) => (e.currentTarget.src = "/images/profile1.png")}
                         />
                         <button className="px-4 py-2 rounded-xl bg-white shadow hover:bg-gray-50 transition">
@@ -34,7 +36,7 @@ export default function Wishlist() {
                         </h2>
 
                         <img
-                            src="/images/Star.png"      
+                            src="/images/Star.png"
                             alt="stars"
                             className="absolute left-65 top-1/2 -translate-y-1/2 h-[150px]"
                         />
