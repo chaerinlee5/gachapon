@@ -46,7 +46,7 @@ export default function Wishlist() {
                     </div>
 
                     {/* Shelf area */}
-                    <div className="relative -mt-38 flex justify-center">
+                    <div className="relative z-10 -mt-38 flex justify-center">
                         {/* Shelf image */}
                         <img
                             src="/images/Shelf.png"
