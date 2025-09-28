@@ -3,11 +3,13 @@ import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../lib/useAuth";
 import { itemImageMap } from "../lib/itemImages";
+import AddToWishlist from "../components/AddToWishlist";
 
 export default function Wishlist() {
   const { user } = useAuth();
   const [profile, setProfile] = useState(null);
   const [wishlistItems, setWishlistItems] = useState([]);
+  const [showModal, setShowModal] = useState(false);
 
   // Fetch profile
   useEffect(() => {
@@ -71,7 +73,8 @@ export default function Wishlist() {
               onError={(e) => (e.currentTarget.src = "/images/profile1.png")}
             />
 
-            <button className="px-4 py-2 rounded-xl bg-white shadow hover:bg-gray-50 transition">
+            <button className="px-4 py-2 rounded-xl bg-white shadow hover:bg-gray-50 transition"
+            onClick={()=> setShowModal(true)}>
               + wishlist
             </button>
             <Link
@@ -137,6 +140,9 @@ export default function Wishlist() {
           </div>
         </div>
       </div>
+        {/* AddToCollection modal */}
+          <AddToWishlist isOpen={showModal} onClose={() => setShowModal(false)} />
     </div>
+   
   );
 }

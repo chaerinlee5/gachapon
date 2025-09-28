@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../lib/useAuth";
 import { supabase } from "../lib/supabase";
-import LogoutButton from "../components/LogoutButton";
+import { useAuth } from "../lib/useAuth";
+import { itemImageMap } from "../lib/itemImages";
 import AddToCollection from "../components/AddToCollection";
-import ProfileImage from "../components/ProfileImage";
+import LogoutButton from "../components/LogoutButton";
 
 export default function ProfilePage() {
   const { user } = useAuth();
   const [profile, setProfile] = useState(null);
+  const [collectionItems, setCollectionItems] = useState([]);
   const [showModal, setShowModal] = useState(false);
 
-  // Fetch profile info when the page loads
+  // Fetch profile
   useEffect(() => {
     if (!user) return;
 
@@ -29,16 +30,51 @@ export default function ProfilePage() {
       });
   }, [user]);
 
+  // Fetch collection
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchCollection = async () => {
+      console.log("Fetching collection for:", user.id);
+      const { data, error } = await supabase
+        .from("user_items")
+        .select(`
+          id,
+          created_at,
+          item:items (
+            id,
+            name,
+            brand,
+            series,
+            image_key
+          )
+        `)
+        .eq("owner_id", user.id);
+
+      if (error) {
+        console.error("Error fetching collection:", error.message);
+      } else {
+        setCollectionItems(data || []);
+      }
+    };
+
+    fetchCollection();
+  }, [user]);
+
   return (
     <div className="min-h-screen bg-[#F3F4F6] text-gray-900">
       <div className="mx-auto max-w-6xl mt-5 px-4 pb-5">
         <div className="relative">
           {/* Left sidebar */}
-          <aside className="absolute left-4 top-6 flex flex-col items-center gap-5 z-50">
-            {/* Profile avatar with change functionality */}
-            <ProfileImage />
+          <aside className="absolute left-4 top-6 flex flex-col items-center gap-5 z-30">
+            <img
+              src={`/images/${profile?.profile_pic_url || "profile1.png"}`}
+              alt={profile?.display_name || "Profile"}
+              className="w-24 h-24 rounded-full"
+              onError={(e) => (e.currentTarget.src = "/images/profile1.png")}
+            />
 
-            {/* Add to collection button */}
+            {/* Open AddToCollection modal */}
             <button
               onClick={() => setShowModal(true)}
               className="px-4 py-2 rounded-xl bg-white shadow hover:bg-gray-50 transition"
@@ -57,9 +93,8 @@ export default function ProfilePage() {
             <LogoutButton />
           </aside>
 
-          {/* Page title */}
           <div className="relative w-full max-w-4xl mx-auto mt-2">
-            <h2 className="text-center text-xl md:text-2xl font-semibold z-30">
+            <h2 className="text-center text-xl md:text-2xl font-semibold z-10">
               user’s collection
             </h2>
 
@@ -92,6 +127,24 @@ export default function ProfilePage() {
               alt="flower"
               className="absolute right-[13%] top-[13%] h-50 rotate-6 z-100 pointer-events-none"
             />
+
+            {/* Items grid overlay */}
+            <div className="absolute inset-0 px-56 py-64 grid grid-cols-4">
+              {collectionItems.map((c) => {
+                const item = c.item;
+                const key = item.image_key.replace(".png", "");
+                const imgSrc = itemImageMap[key] || "/images/fallback.png";
+                return (
+                  <div key={c.id} className="flex flex-col items-center">
+                    <img
+                      src={imgSrc}
+                      alt={item.name}
+                      className="w-32 h-32 object-contain m-0 p-0 block"
+                    />
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
