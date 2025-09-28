@@ -12,9 +12,10 @@ export default function Wishlist() {
                     {/* Left sidebar */}
                     <aside className="absolute -left-10 top-6 hidden md:flex md:flex-col md:items-center gap-5">
                         <img
-                            src="/images/avatar.png"
-                            alt="avatar"
-                            className="h-24 w-24 rounded-full object-cover shadow"
+                            src={`/images/${user.profile_pic_url || "profile1.png"}`}
+                            alt="Profile"
+                            className="w-8 h-8 rounded-full"
+                            onError={(e) => (e.currentTarget.src = "/images/profile1.png")}
                         />
                         <button className="px-4 py-2 rounded-xl bg-white shadow hover:bg-gray-50 transition">
                             + wishlist

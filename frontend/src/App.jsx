@@ -62,11 +62,15 @@ export default function App() {
             {profile && (
               <Link to="/profile" className="absolute right-4">
                 <img
-                  src={profile?.profile_pic_url || "/default-avatar.png"}
-                  alt={profile?.display_name || "Profile"}
-                  className="w-10 h-10 rounded-full shadow-md object-cover hover:opacity-80 transition"
-                  onError={(e) => (e.currentTarget.src = "/default-avatar.png")}
-                />
+                  src={
+                  profile?.profile_pic_url
+                  ? `/images/${profile.profile_pic_url}`
+                  : "/images/profile1.png"
+                }
+                alt={profile?.display_name || "Profile"}
+                className="w-10 h-10 rounded-full shadow-md object-cover hover:opacity-80 transition"
+                onError={(e) => (e.currentTarget.src = "/images/profile1.png")}
+              />
               </Link>
             )}
           </div>

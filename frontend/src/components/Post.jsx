@@ -87,9 +87,10 @@ const Post = ({ post }) => {
       <div className="bg-white shadow overflow-hidden">
         <div className="flex items-center gap-3 p-4">
           <img
-            src={a.profile_pic_url || "/avatar.png"}
+            src={a.profile_pic_url ? `/images/${a.profile_pic_url}` : "/images/profile1.png"}
             alt={a.display_name || "User avatar"}
             className="w-10 h-10 shadow-lg rounded-full"
+            onError={(e) => (e.currentTarget.src = "/images/profile1.png")}
           />
           <span className="font-semibold">{a.display_name || "Anonymous"}</span>
         </div>

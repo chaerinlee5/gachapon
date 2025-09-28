@@ -1,53 +1,86 @@
-// mapping between keys and images
-const profileMap = {
-  profile1,
-  profile2,
-  profile3,
-  profile4,
-  profile5,
-  profile6,
-  profile7,
-  profile8,
-};
+import { useState, useEffect } from "react";
+import { supabase } from "../lib/supabase";
 
-const profileOptions = Object.keys(profileMap);
+// List of available profile images
+const profileOptions = [
+  "profile1.png",
+  "profile2.png",
+  "profile3.png",
+  "profile4.png",
+  "profile5.png",
+  "profile6.png",
+  "profile7.png",
+  "profile8.png",
+];
 
 const ProfileImage = () => {
   const [showPopup, setShowPopup] = useState(false);
-  const [selectedImage, setSelectedImage] = useState("profile1"); // default key
+  const [selectedImage, setSelectedImage] = useState("profile1.png"); // fallback
 
-  const handleSave = async (key) => {
-    setSelectedImage(key);
+  // Load current user's profile image from Supabase
+  useEffect(() => {
+    const loadProfile = async () => {
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+      if (userError || !user) return;
+
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("profile_pic_url")
+        .eq("id", user.id)
+        .single();
+
+      if (!error && data?.profile_pic_url) {
+        setSelectedImage(data.profile_pic_url);
+      }
+    };
+
+    loadProfile();
+  }, []);
+
+  // Save a new avatar selection to Supabase
+  const handleSave = async (filename) => {
+    setSelectedImage(filename);
     setShowPopup(false);
+
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+    if (userError || !user) return;
 
     const { error } = await supabase
       .from("profiles")
-      .update({ profile_pic_url: key }) // store just the string
-      .eq("id", "USER_ID");
+      .update({ profile_pic_url: filename })
+      .eq("id", user.id);
 
-    if (error) console.error(error);
+    if (error) console.error("Error updating profile:", error.message);
   };
 
   return (
     <div>
+      {/* Profile Image Button */}
       <button onClick={() => setShowPopup(true)}>
         <img
-          src={profileMap[selectedImage]}
+          src={`/images/${selectedImage}`}
           alt="Profile"
           className="w-24 h-24 rounded-full border shadow"
         />
       </button>
 
+      {/* Popup Modal */}
       {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40">
           <div className="bg-white p-6 rounded-lg shadow-lg">
             <h2 className="text-lg font-semibold mb-4">Choose your avatar</h2>
             <div className="grid grid-cols-4 gap-4">
-              {profileOptions.map((key) => (
-                <button key={key} onClick={() => handleSave(key)}>
+              {profileOptions.map((filename) => (
+                <button key={filename} onClick={() => handleSave(filename)}>
                   <img
-                    src={profileMap[key]}
-                    alt={key}
+                    src={`/images/${filename}`}
+                    alt={filename}
                     className="w-16 h-16 rounded-full border hover:scale-110 transition"
                   />
                 </button>
@@ -65,3 +98,5 @@ const ProfileImage = () => {
     </div>
   );
 };
+
+export default ProfileImage;
