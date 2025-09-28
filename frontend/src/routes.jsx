@@ -4,6 +4,7 @@ import FeedPage from "./pages/FeedPage";
 import ProfilePage from "./pages/ProfilePage";
 import LoginPage from "./pages/LoginPage";
 import Wishlist from "./pages/Wishlist";
+import WishlistTrial from "./pages/WishlistTrial"
 
 function Protected({ children }) {
   const { user, loading } = useAuth();
@@ -45,13 +46,22 @@ export default function AppRoutes() {
         }
       />
       <Route
-        path="/wishlist"  
+        path="/wishlist"
         element={
           <Protected>
             <Wishlist />
           </Protected>
         }
       />
+      <Route
+        path="/wishlisttrial"
+        element={
+          <Protected>
+            <WishlistTrial />
+          </Protected>
+        }
+      />
+
     </Routes>
   );
 }
