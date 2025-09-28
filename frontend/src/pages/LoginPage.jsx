@@ -1,56 +1,69 @@
-import LoginButton from "../components/LoginButton";
-import gachaponLogin from "../assets/gachaponLogin.png";
-import sonnyLogin from "../assets/sonnyLogin.png";
-import smiskiLogin from "../assets/smiskiLogin.png";
-import calicoLogin from "../assets/calicoLogin.png";
+import { supabase } from "../lib/supabase";
 
-const LoginPage = () => {
-  return (
-    <div className="flex flex-col h-screen items-center bg-[#F6F6F6]">
-      <div className="p-4 mt-20">
-        <img
-          src={gachaponLogin}
-          alt="Gachapon login"
-          className="w-120 max-w-full"
-        />
-      </div>
+export default function LoginButton() {
+    const handleLogin = async () => {
+        try {
+            // Build the redirect URL more carefully
+            const origin = window.location.origin; // https://chaerinlee5.github.io
+            const basePath = '/gachapon'; // Your GitHub Pages path
+            const redirectUrl = `${origin}${basePath}/feed`;
 
-      <div className="pr-80">
-        <img
-          src={sonnyLogin}
-          alt="Sonny login"
-          className="w-15 h-auto"
-        />
-      </div>
+            console.log('=== LOGIN DEBUG INFO ===');
+            console.log('Origin:', origin);
+            console.log('Base path:', basePath);
+            console.log('Full redirect URL:', redirectUrl);
+            console.log('Current location:', window.location.href);
 
-      <div
-        className="
-          w-full max-w-xl px-30 p-4 rounded-full shadow-xl
-          bg-[#E3E3E3] 
-          transition
-          hover:bg-[#d6d6d6] hover:shadow-2xl
-          cursor-pointer
-        "
-      >
-        <div className="flex justify-center">
-          <LoginButton />
-        </div>
-      </div>
+            const { data, error } = await supabase.auth.signInWithOAuth({
+                provider: "google",
+                options: {
+                    redirectTo: redirectUrl,
+                    queryParams: {
+                        access_type: 'offline',
+                        prompt: 'select_account',
+                    }
+                },
+            });
 
-      <div className="mt-auto w-full flex justify-between px-4 pb-4">
-        <img
-          src={calicoLogin}
-          alt="Calico login"
-          className="w-35 h-auto"
-        />
-        <img
-          src={smiskiLogin}
-          alt="Smiski login"
-          className="w-35 h-auto"
-        />
-      </div>
-    </div>
-  );
-};
+            if (error) {
+                console.error("=== LOGIN ERROR ===");
+                console.error("Error message:", error.message);
+                console.error("Error code:", error.status);
+                console.error("Full error:", error);
+                
+                // Show user-friendly error messages
+                if (error.message.includes('Database error')) {
+                    alert('Account creation failed. Please try again or contact support.');
+                } else {
+                    alert(`Login failed: ${error.message}`);
+                }
+            } else {
+                console.log("=== LOGIN INITIATED ===");
+                console.log("Redirecting to Google...");
+            }
+        } catch (err) {
+            console.error("=== UNEXPECTED ERROR ===");
+            console.error(err);
+            alert("An unexpected error occurred. Please try again.");
+        }
+    };
 
-export default LoginPage;
+    return (
+        <button
+            onClick={handleLogin}
+            className="inline-flex items-center cursor-pointer gap-2 px-4 py-2 rounded-xl transition hover:bg-gray-100"
+        >
+            <svg
+                className="w-5 h-5"
+                viewBox="0 0 48 48"
+                aria-hidden="true"
+            >
+                <path fill="#EA4335" d="M24 9.5c3.54 0 6.72 1.23 9.23 3.64l6.15-6.15C35.9 3.02 30.41 1 24 1 14.64 1 6.55 6.16 2.7 13.65l7.34 5.69C12.05 14.12 17.58 9.5 24 9.5z" />
+                <path fill="#4285F4" d="M46.5 24c0-1.64-.15-3.21-.44-4.71H24v9.02h12.7c-.55 2.97-2.22 5.49-4.73 7.18l7.28 5.65C43.92 37.6 46.5 31.3 46.5 24z" />
+                <path fill="#FBBC05" d="M10.04 19.34l-7.34-5.69C.97 16.74 0 20.26 0 24c0 3.73.97 7.25 2.7 10.35l7.34-5.69C9.38 26.8 9 25.44 9 24s.38-2.8 1.04-4.66z" />
+                <path fill="#34A853" d="M24 47c6.41 0 11.82-2.11 15.74-5.77l-7.28-5.65c-2.02 1.36-4.61 2.16-8.46 2.16-6.42 0-11.95-4.62-13.96-10.47l-7.34 5.69C6.55 41.84 14.64 47 24 47z" />
+            </svg>
+            <span className="text-lg">sign in with Google</span>
+        </button>
+    );
+}
