@@ -5,6 +5,7 @@ import { useAuth } from "../lib/useAuth";
 import { itemImageMap } from "../lib/itemImages";
 import AddToCollection from "../components/AddToCollection";
 import LogoutButton from "../components/LogoutButton";
+import ProfileImage from "../components/ProfileImage";
 
 export default function ProfilePage() {
   const { user } = useAuth();
@@ -71,10 +72,10 @@ export default function ProfilePage() {
             <div className="relative">
               <ProfileImage />
               <p className="text-sm font-medium text-gray-700">
-              {profile?.display_name
-                ? profile.display_name.toLowerCase()
-                : "user"}
-            </p>
+                {profile?.display_name
+                  ? profile.display_name.toLowerCase()
+                  : "user"}
+              </p>
             </div>
 
             {/* Open AddToCollection modal */}
@@ -97,28 +98,28 @@ export default function ProfilePage() {
           </aside>
 
           {/* Page title with stickers */}
-<div className="relative w-full max-w-4xl mx-auto mt-2 z-40">
-  <div className="flex items-center justify-center gap-1">
-    {/* Left sticker */}
-    <img
-      src="/images/Star.png"
-      alt="stars"
-      className="h-[120px] pointer-events-none z-20"
-    />
+          <div className="relative w-full max-w-4xl mx-auto mt-2 z-40">
+            <div className="flex items-center justify-center gap-1">
+              {/* Left sticker */}
+              <img
+                src="/images/Star.png"
+                alt="stars"
+                className="h-[120px] pointer-events-none z-20"
+              />
 
-    {/* Title */}
-    <h2 className="text-center text-xl md:text-2xl font-semibold">
-      collection
-    </h2>
+              {/* Title */}
+              <h2 className="text-center text-xl md:text-2xl font-semibold">
+                collection
+              </h2>
 
-    {/* Right sticker */}
-    <img
-      src="/images/Star frog.png"
-      alt="frog"
-      className="h-[120px] pointer-events-none z-20"
-    />
-  </div>
-</div>
+              {/* Right sticker */}
+              <img
+                src="/images/Star frog.png"
+                alt="frog"
+                className="h-[120px] pointer-events-none z-20"
+              />
+            </div>
+          </div>
 
           {/* Shelf area */}
           <div className="relative z-0 -mt-38 flex justify-center">
