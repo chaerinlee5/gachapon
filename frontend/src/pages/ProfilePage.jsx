@@ -4,7 +4,7 @@ import { useAuth } from "../lib/useAuth";
 import { supabase } from "../lib/supabase";
 import LogoutButton from "../components/LogoutButton";
 import AddToCollection from "../components/AddToCollection";
-import ProfileImage from "../components/ProfileImage"; // 👈 bring back avatar picker
+import ProfileImage from "../components/ProfileImage";
 
 export default function ProfilePage() {
   const { user } = useAuth();
