@@ -1,25 +1,103 @@
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "../lib/useAuth";
+import { supabase } from "../lib/supabase";
 import LogoutButton from "../components/LogoutButton";
+import AddToCollection from "../components/AddToCollection";
 import ProfileImage from "../components/ProfileImage";
-import { Link } from "react-router-dom";   // 👈 import Link
 
-const ProfilePage = () => {
+export default function ProfilePage() {
+  const { user } = useAuth();
+  const [profile, setProfile] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+
+  // Fetch profile info when the page loads
+  useEffect(() => {
+    if (!user) return;
+
+    supabase
+      .from("profiles")
+      .select("display_name, profile_pic_url")
+      .eq("id", user.id)
+      .single()
+      .then(({ data, error }) => {
+        if (error) {
+          console.error("Error fetching profile:", error.message);
+        } else {
+          setProfile(data);
+        }
+      });
+  }, [user]);
+
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Profile</h1>
-      <ProfileImage />
+    <div className="min-h-screen bg-[#F3F4F6] text-gray-900">
+      <div className="mx-auto max-w-6xl mt-5 px-4 pb-5">
+        <div className="relative">
+          {/* Left sidebar */}
+          <aside className="absolute left-4 top-6 flex flex-col items-center gap-5 z-10">
+            {/* 👇 this now uses the ProfileImage component for change-avatar */}
+            <ProfileImage />
 
-      <div className="mt-4 flex flex-col gap-3">
-        <Link
-          to="/wishlist"
-          className="px-4 py-2 rounded-xl bg-white shadow hover:bg-gray-50 transition"
-        >
-          Go to Wishlist
-        </Link>
+            {/* Add to collection button */}
+            <button
+              onClick={() => setShowModal(true)}
+              className="px-4 py-2 rounded-xl bg-white shadow hover:bg-gray-50 transition"
+            >
+              + collection
+            </button>
 
-        <LogoutButton />
+            {/* Go to wishlist */}
+            <Link
+              to="/wishlist"
+              className="px-4 py-2 rounded-xl bg-white shadow hover:bg-gray-50 text-center transition"
+            >
+              go to wishlist
+            </Link>
+
+            <LogoutButton />
+          </aside>
+
+          <div className="relative w-full max-w-4xl mx-auto mt-2">
+            <h2 className="text-center text-xl md:text-2xl font-semibold z-10">
+              user’s collection
+            </h2>
+
+            <img
+              src="/images/Star.png"
+              alt="stars"
+              className="absolute left-65 top-1/2 -translate-y-1/2 h-[150px]"
+            />
+
+            <img
+              src="/images/Star frog.png"
+              alt="frog"
+              className="absolute right-65 top-1/2 -translate-y-1/2 h-[150px]"
+            />
+          </div>
+
+          {/* Shelf area */}
+          <div className="relative z-10 -mt-38 flex justify-center">
+            <img
+              src="/images/Shelf.png"
+              alt="wooden shelf"
+              className="w-[900px] max-w-full relative z-0"
+            />
+            <img
+              src="/images/Green bow.png"
+              alt="ribbon"
+              className="absolute left-[18%] top-[17%] h-27 rotate-6 z-100 pointer-events-none"
+            />
+            <img
+              src="/images/Pink flower.png"
+              alt="flower"
+              className="absolute right-[13%] top-[13%] h-50 rotate-6 z-100 pointer-events-none"
+            />
+          </div>
+        </div>
       </div>
+
+      {/* AddToCollection modal */}
+      <AddToCollection isOpen={showModal} onClose={() => setShowModal(false)} />
     </div>
   );
-};
-
-export default ProfilePage;
+}
