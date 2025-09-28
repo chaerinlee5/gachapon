@@ -1,13 +1,14 @@
+// src/main.jsx
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
-import AppWrapper from "./App";
+import { HashRouter } from "react-router-dom"; // use HashRouter for GitHub Pages
+import { AppWrapper } from "./AppWrapper";
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <BrowserRouter basename="/gachapon">
+    <HashRouter>
       <AppWrapper />
-    </BrowserRouter>
+    </HashRouter>
   </React.StrictMode>
 );

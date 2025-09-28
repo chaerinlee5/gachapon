@@ -2,18 +2,28 @@ import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "./lib/useAuth";
 import App from "./App";
+import { supabase, ensureProfileRow } from "./lib/supabase";
 
-export default function AppWrapper() {
+
+export function AppWrapper() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    // If logged in and on /login, send to /feed
-    if (!loading && user && location.pathname === "/login") {
-      navigate("/feed", { replace: true });
+    if (loading) return;
+
+    if (user) {
+      // 🔹 ensure row exists for new users
+      ensureProfileRow();
+
+      if (location.pathname === "/login") {
+        navigate("/feed", { replace: true });
+      }
+    } else if (!user && location.pathname !== "/login") {
+      navigate("/login", { replace: true });
     }
-  }, [user, loading, location, navigate]);
+  }, [user, loading, location.pathname, navigate]);
 
   return <App />;
 }

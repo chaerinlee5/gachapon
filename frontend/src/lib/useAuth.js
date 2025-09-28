@@ -1,3 +1,4 @@
+// src/lib/useAuth.js
 import { useEffect, useState } from "react";
 import { supabase, ensureProfileRow } from "./supabase";
 
@@ -6,26 +7,28 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Get current session (not just user) on mount
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
+    // initial fetch
+    supabase.auth.getUser().then(({ data, error }) => {
+      console.log("getUser result:", data, error);
+      setUser(data?.user ?? null);
       setLoading(false);
+      if (data?.user) {
+        console.log("Running ensureProfileRow for initial user:", data.user.id);
+        ensureProfileRow();
+      }
     });
 
-    // Subscribe to auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        console.log("Auth event:", event, "Session:", session?.user ? "Present" : "None");
-        setUser(session?.user ?? null);
-        setLoading(false);
-
-        // Create profile row right after login
-        if (event === "SIGNED_IN" && session?.user) {
-          await ensureProfileRow();
-          console.log("Profile row ensured for user:", session.user.id);
-        }
+    // subscribe to auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("Auth event:", event, "Session:", session);
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        console.log("Running ensureProfileRow for:", session.user.id);
+        ensureProfileRow();
       }
-    );
+    });
 
     return () => subscription.unsubscribe();
   }, []);

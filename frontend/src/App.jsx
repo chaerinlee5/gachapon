@@ -1,20 +1,31 @@
+// src/App.jsx
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import AppRoutes from "./routes";
 import { useAuth } from "./lib/useAuth";
-import { supabase } from "./lib/supabase";
+import { supabase, ensureProfileRow } from "./lib/supabase";
 import { useEffect, useState } from "react";
 import logo from "./assets/gachaponLogo.png";
 
-function AppWrapper() {
+
+export function AppWrapper() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    if (!loading && user && location.pathname === "/login") {
-      navigate("/feed");
+    if (loading) return;
+
+    if (user) {
+      // 🔹 ensure row exists for new users
+      ensureProfileRow();
+
+      if (location.pathname === "/login") {
+        navigate("/feed", { replace: true });
+      }
+    } else if (!user && location.pathname !== "/login") {
+      navigate("/login", { replace: true });
     }
-  }, [user, loading, location, navigate]);
+  }, [user, loading, location.pathname, navigate]);
 
   return <App />;
 }
@@ -25,7 +36,7 @@ export default function App() {
   const [profile, setProfile] = useState(null);
 
   const hideHeader = location.pathname === "/login";
-  const base = import.meta.env.BASE_URL; // ✅ base path for GitHub Pages
+  const base = import.meta.env.BASE_URL; // correct base for GitHub Pages
 
   // fetch profile data when user changes
   useEffect(() => {
@@ -76,7 +87,9 @@ export default function App() {
                   }
                   alt={profile?.display_name || "Profile"}
                   className="w-10 h-10 rounded-full shadow-md object-cover hover:opacity-80 transition"
-                  onError={(e) => (e.currentTarget.src = `${base}images/profile1.png`)}
+                  onError={(e) =>
+                    (e.currentTarget.src = `${base}images/profile1.png`)
+                  }
                 />
               </Link>
             )}
