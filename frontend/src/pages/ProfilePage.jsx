@@ -34,9 +34,16 @@ export default function ProfilePage() {
       <div className="mx-auto max-w-6xl mt-5 px-4 pb-5">
         <div className="relative">
           {/* Left sidebar */}
-          <aside className="absolute left-4 top-6 flex flex-col items-center gap-5 z-50">
-            {/* Profile avatar with change functionality */}
-            <ProfileImage />
+          <aside className="absolute left-4 top-6 flex flex-col items-center gap-5 z-30">
+            {/* Profile avatar with overlayed username */}
+            <div className="relative">
+              <ProfileImage />
+              <p className="text-sm font-medium text-gray-700">
+              {profile?.display_name
+                ? profile.display_name.toLowerCase()
+                : "user"}
+            </p>
+            </div>
 
             {/* Add to collection button */}
             <button
@@ -57,40 +64,46 @@ export default function ProfilePage() {
             <LogoutButton />
           </aside>
 
-          {/* Page title */}
-          <div className="relative w-full max-w-4xl mx-auto mt-2">
-            <h2 className="text-center text-xl md:text-2xl font-semibold z-30">
-              user’s collection
-            </h2>
+          {/* Page title with stickers */}
+<div className="relative w-full max-w-4xl mx-auto mt-2 z-40">
+  <div className="flex items-center justify-center gap-1">
+    {/* Left sticker */}
+    <img
+      src="/images/Star.png"
+      alt="stars"
+      className="h-[120px] pointer-events-none z-20"
+    />
 
-            <img
-              src="/images/Star.png"
-              alt="stars"
-              className="absolute left-65 top-1/2 -translate-y-1/2 h-[150px]"
-            />
-            <img
-              src="/images/Star frog.png"
-              alt="frog"
-              className="absolute right-65 top-1/2 -translate-y-1/2 h-[150px]"
-            />
-          </div>
+    {/* Title */}
+    <h2 className="text-center text-xl md:text-2xl font-semibold">
+      collection
+    </h2>
+
+    {/* Right sticker */}
+    <img
+      src="/images/Star frog.png"
+      alt="frog"
+      className="h-[120px] pointer-events-none z-20"
+    />
+  </div>
+</div>
 
           {/* Shelf area */}
-          <div className="relative z-10 -mt-38 flex justify-center">
+          <div className="relative z-0 -mt-38 flex justify-center">
             <img
               src="/images/Shelf.png"
               alt="wooden shelf"
-              className="w-[900px] max-w-full relative z-0"
+              className="w-[900px] max-w-full relative pointer-events-none z-0"
             />
             <img
               src="/images/Green bow.png"
               alt="ribbon"
-              className="absolute left-[18%] top-[17%] h-27 rotate-6 z-100 pointer-events-none"
+              className="absolute left-[18%] top-[17%] h-27 rotate-6 pointer-events-none z-0"
             />
             <img
               src="/images/Pink flower.png"
               alt="flower"
-              className="absolute right-[13%] top-[13%] h-50 rotate-6 z-100 pointer-events-none"
+              className="absolute right-[13%] top-[13%] h-50 rotate-6 pointer-events-none z-0"
             />
           </div>
         </div>
