@@ -3,7 +3,7 @@ import { supabase } from "../lib/supabase";
 export default function LoginButton() {
     const handleLogin = async () => {
         const baseUrl = import.meta.env.BASE_URL; // "/gachapon/" in production
-        const redirectUrl = `${window.location.origin}${baseUrl}feed`; // 👈 go straight to /feed
+        const redirectUrl = `${window.location.origin}${import.meta.env.BASE_URL}feed`;
 
         console.log('Redirecting to:', redirectUrl);
 
