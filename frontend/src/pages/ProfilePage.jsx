@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../lib/useAuth";
@@ -12,6 +12,33 @@ export default function ProfilePage() {
   const [profile, setProfile] = useState(null);
   const [collectionItems, setCollectionItems] = useState([]);
   const [showModal, setShowModal] = useState(false);
+
+  // 🔹 Define fetchCollection once, reuse it
+  const fetchCollection = useCallback(async () => {
+    if (!user) return;
+
+    console.log("Fetching collection for:", user.id);
+    const { data, error } = await supabase
+      .from("user_items")
+      .select(`
+        id,
+        created_at,
+        item:items (
+          id,
+          name,
+          brand,
+          series,
+          image_key
+        )
+      `)
+      .eq("owner_id", user.id);
+
+    if (error) {
+      console.error("Error fetching collection:", error.message);
+    } else {
+      setCollectionItems(data || []);
+    }
+  }, [user]);
 
   // Fetch profile
   useEffect(() => {
@@ -31,36 +58,10 @@ export default function ProfilePage() {
       });
   }, [user]);
 
-  // Fetch collection
+  // Fetch collection initially
   useEffect(() => {
-    if (!user) return;
-
-    const fetchCollection = async () => {
-      console.log("Fetching collection for:", user.id);
-      const { data, error } = await supabase
-        .from("user_items")
-        .select(`
-          id,
-          created_at,
-          item:items (
-            id,
-            name,
-            brand,
-            series,
-            image_key
-          )
-        `)
-        .eq("owner_id", user.id);
-
-      if (error) {
-        console.error("Error fetching collection:", error.message);
-      } else {
-        setCollectionItems(data || []);
-      }
-    };
-
     fetchCollection();
-  }, [user]);
+  }, [fetchCollection]);
 
   return (
     <div className="min-h-screen bg-[#F3F4F6] text-gray-900">
@@ -68,7 +69,6 @@ export default function ProfilePage() {
         <div className="relative">
           {/* Left sidebar */}
           <aside className="absolute left-4 top-6 flex flex-col items-center gap-5 z-30">
-            {/* Profile avatar with overlayed username */}
             <div className="relative">
               <ProfileImage />
               <p className="text-sm font-medium text-gray-700">
@@ -78,7 +78,6 @@ export default function ProfilePage() {
               </p>
             </div>
 
-            {/* Open AddToCollection modal */}
             <button
               onClick={() => setShowModal(true)}
               className="px-4 py-2 rounded-xl bg-white shadow hover:bg-gray-50 transition"
@@ -86,7 +85,6 @@ export default function ProfilePage() {
               + collection
             </button>
 
-            {/* Go to wishlist */}
             <Link
               to="/wishlist"
               className="px-4 py-2 rounded-xl bg-white shadow hover:bg-gray-50 text-center transition"
@@ -97,27 +95,14 @@ export default function ProfilePage() {
             <LogoutButton />
           </aside>
 
-          {/* Page title with stickers */}
+          {/* Page title */}
           <div className="relative w-full max-w-4xl mx-auto z-40">
             <div className="flex items-center justify-center gap-1">
-              {/* Left sticker */}
-              <img
-                src="/images/Star.png"
-                alt="stars"
-                className="h-[120px] pointer-events-none z-20"
-              />
-
-              {/* Title */}
+              <img src="/images/Star.png" alt="stars" className="h-[120px]" />
               <h2 className="text-center text-xl md:text-2xl font-semibold">
                 collection
               </h2>
-
-              {/* Right sticker */}
-              <img
-                src="/images/Star frog.png"
-                alt="frog"
-                className="h-[120px] pointer-events-none z-20"
-              />
+              <img src="/images/Star frog.png" alt="frog" className="h-[120px]" />
             </div>
           </div>
 
@@ -128,18 +113,7 @@ export default function ProfilePage() {
               alt="wooden shelf"
               className="w-[900px] max-w-full relative pointer-events-none z-0"
             />
-            <img
-              src="/images/Green bow.png"
-              alt="ribbon"
-              className="absolute left-[18%] top-[17%] h-27 rotate-6 pointer-events-none z-0"
-            />
-            <img
-              src="/images/Pink flower.png"
-              alt="flower"
-              className="absolute right-[13%] top-[13%] h-50 rotate-6 pointer-events-none z-0"
-            />
 
-            {/* Items grid overlay */}
             <div className="absolute inset-0 px-56 py-70 grid grid-cols-4">
               {collectionItems.map((c) => {
                 const item = c.item;
@@ -150,7 +124,7 @@ export default function ProfilePage() {
                     <img
                       src={imgSrc}
                       alt={item.name}
-                      className="w-32 h-32 object-contain m-0 p-0 block"
+                      className="w-32 h-32 object-contain"
                     />
                   </div>
                 );
@@ -161,7 +135,13 @@ export default function ProfilePage() {
       </div>
 
       {/* AddToCollection modal */}
-      <AddToCollection isOpen={showModal} onClose={() => setShowModal(false)} />
+      <AddToCollection
+        isOpen={showModal}
+        onClose={() => {
+          setShowModal(false);
+          fetchCollection(); // 🔹 refresh after modal closes
+        }}
+      />
     </div>
   );
 }
