@@ -6,15 +6,25 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // get current user once on mount
     supabase.auth.getUser().then(({ data }) => {
       setUser(data?.user ?? null);
       setLoading(false);
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
-      setUser(session?.user ?? null);
-    });
+    // subscribe to auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setUser(session?.user ?? null);
 
+        // ✅ clean URL after login (removes #access_token from hash)
+        if (event === "SIGNED_IN") {
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+      }
+    );
+
+    // cleanup subscription on unmount
     return () => subscription.unsubscribe();
   }, []);
 
