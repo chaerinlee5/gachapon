@@ -1,9 +1,9 @@
-// routes.jsx
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "./lib/useAuth";
 import FeedPage from "./pages/FeedPage";
 import ProfilePage from "./pages/ProfilePage";
 import LoginPage from "./pages/LoginPage";
+import Wishlist from "./pages/Wishlist";
 
 function Protected({ children }) {
   const { user, loading } = useAuth();
@@ -42,6 +42,14 @@ export default function AppRoutes() {
           <PublicOnly>
             <LoginPage />
           </PublicOnly>
+        }
+      />
+      <Route
+        path="/wishlist"  
+        element={
+          <Protected>
+            <Wishlist />
+          </Protected>
         }
       />
     </Routes>
