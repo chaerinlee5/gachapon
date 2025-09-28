@@ -16,6 +16,7 @@ const profileOptions = [
 const ProfileImage = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [selectedImage, setSelectedImage] = useState("profile1.png"); // fallback
+  const base = import.meta.env.BASE_URL; // ✅ base path for GitHub Pages
 
   // Load current user's profile image from Supabase
   useEffect(() => {
@@ -64,9 +65,10 @@ const ProfileImage = () => {
       {/* Profile Image Button */}
       <button onClick={() => setShowPopup(true)}>
         <img
-          src={`/images/${selectedImage}`}
+          src={`${base}images/${selectedImage}`}
           alt="Profile"
           className="w-24 h-24 rounded-full border shadow"
+          onError={(e) => (e.currentTarget.src = `${base}images/profile1.png`)}
         />
       </button>
 
@@ -79,7 +81,7 @@ const ProfileImage = () => {
               {profileOptions.map((filename) => (
                 <button key={filename} onClick={() => handleSave(filename)}>
                   <img
-                    src={`/images/${filename}`}
+                    src={`${base}images/${filename}`}
                     alt={filename}
                     className="w-16 h-16 rounded-full border hover:scale-110 transition"
                   />

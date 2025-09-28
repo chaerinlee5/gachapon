@@ -3,7 +3,7 @@ import AppRoutes from "./routes";
 import { useAuth } from "./lib/useAuth";
 import { supabase } from "./lib/supabase";
 import { useEffect, useState } from "react";
-import logo from "./assets/gachaponLogo.png"
+import logo from "./assets/gachaponLogo.png";
 
 function AppWrapper() {
   const { user, loading } = useAuth();
@@ -25,6 +25,7 @@ export default function App() {
   const [profile, setProfile] = useState(null);
 
   const hideHeader = location.pathname === "/login";
+  const base = import.meta.env.BASE_URL; // ✅ base path for GitHub Pages
 
   // fetch profile data when user changes
   useEffect(() => {
@@ -70,12 +71,12 @@ export default function App() {
                 <img
                   src={
                     profile?.profile_pic_url
-                      ? `/images/${profile.profile_pic_url}`
-                      : "/images/profile1.png"
+                      ? `${base}images/${profile.profile_pic_url}`
+                      : `${base}images/profile1.png`
                   }
                   alt={profile?.display_name || "Profile"}
                   className="w-10 h-10 rounded-full shadow-md object-cover hover:opacity-80 transition"
-                  onError={(e) => (e.currentTarget.src = "/images/profile1.png")}
+                  onError={(e) => (e.currentTarget.src = `${base}images/profile1.png`)}
                 />
               </Link>
             )}
@@ -83,9 +84,11 @@ export default function App() {
         </header>
       )}
 
-      <main className={`mx-auto ${hideHeader ? "" : "pt-16"} max-w px-4 sm:px-6 lg:px-8`}>
+      <main
+        className={`mx-auto ${hideHeader ? "" : "pt-16"} max-w px-4 sm:px-6 lg:px-8`}
+      >
         <AppRoutes />
       </main>
-    </div >
+    </div>
   );
 }

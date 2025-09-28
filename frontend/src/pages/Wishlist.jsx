@@ -12,7 +12,6 @@ export default function Wishlist() {
   const [wishlistItems, setWishlistItems] = useState([]);
   const [showModal, setShowModal] = useState(false);
 
-  // 🔹 Fetch wishlist items
   const fetchWishlist = useCallback(async () => {
     if (!user) return;
 
@@ -38,7 +37,6 @@ export default function Wishlist() {
     }
   }, [user]);
 
-  // 🔹 Fetch profile
   useEffect(() => {
     if (!user) return;
 
@@ -56,23 +54,24 @@ export default function Wishlist() {
       });
   }, [user]);
 
-  // 🔹 Fetch wishlist initially
   useEffect(() => {
     fetchWishlist();
   }, [fetchWishlist]);
 
+  const base = import.meta.env.BASE_URL;
+
   return (
     <div className="min-h-screen bg-[#F3F4F6] text-gray-900">
-      <div className="mx-auto max-w-6xl mt-5 px-4 pb-5">
+      <div className="mx-auto max-w-6xl px-4 pb-5">
         <div className="relative">
-          {/* Left sidebar */}
+          {/* Sidebar */}
           <aside className="absolute left-4 top-6 flex flex-col items-center gap-5 z-30">
             <div className="relative flex flex-col items-center">
               <img
-                src={`/images/${profile?.profile_pic_url || "profile1.png"}`}
+                src={`${base}images/${profile?.profile_pic_url || "profile1.png"}`}
                 alt={profile?.display_name || "Profile"}
                 className="w-24 h-24 rounded-full"
-                onError={(e) => (e.currentTarget.src = "/images/profile1.png")}
+                onError={(e) => (e.currentTarget.src = `${base}images/profile1.png`)}
               />
               <p className="mt-2 text-sm font-medium text-gray-700">
                 {profile?.display_name
@@ -96,55 +95,47 @@ export default function Wishlist() {
             <LogoutButton />
           </aside>
 
-          {/* Page title with decorative stars */}
+          {/* Title */}
           <div className="relative w-full max-w-4xl mx-auto mt-2 z-40">
             <div className="flex items-center justify-center gap-1">
-              <img
-                src="/images/Star.png"
-                alt="stars"
-                className="h-[120px] pointer-events-none z-20"
-              />
+              <img src={`${base}images/Star.png`} alt="stars" className="h-[120px]" />
               <h2 className="text-center text-xl md:text-2xl font-semibold">
                 wishlist
               </h2>
-              <img
-                src="/images/Star frog.png"
-                alt="frog"
-                className="h-[120px] pointer-events-none z-20"
-              />
+              <img src={`${base}images/Star frog.png`} alt="frog" className="h-[120px]" />
             </div>
           </div>
 
-          {/* Shelf with decorations + items grid */}
-          <div className="relative z-0 -mt-38 flex justify-center">
+          {/* Shelf */}
+          <div className="relative z-0 -mt-48 flex justify-center">
             <img
-              src="/images/Shelf.png"
+              src={`${base}images/Shelf.png`}
               alt="wooden shelf"
               className="w-[900px] max-w-full relative pointer-events-none z-0"
             />
             <img
-              src="/images/Green bow.png"
+              src={`${base}images/Green bow.png`}
               alt="ribbon"
               className="absolute left-[18%] top-[17%] h-27 rotate-6 pointer-events-none z-0"
             />
             <img
-              src="/images/Pink flower.png"
+              src={`${base}images/Pink flower.png`}
               alt="flower"
               className="absolute right-[13%] top-[13%] h-50 rotate-6 pointer-events-none z-0"
             />
 
-            {/* Items grid overlay */}
-            <div className="absolute inset-0 px-56 py-64 grid grid-cols-4">
+            {/* Items */}
+            <div className="absolute inset-0 px-56 py-70 grid grid-cols-4">
               {wishlistItems.map((w) => {
                 const item = w.item;
                 const key = item.image_key.replace(".png", "");
-                const imgSrc = itemImageMap[key] || "/images/fallback.png";
+                const imgSrc = itemImageMap[key] || `${base}images/fallback.png`;
                 return (
                   <div key={w.id} className="flex flex-col items-center">
                     <img
                       src={imgSrc}
                       alt={item.name}
-                      className="w-32 h-32 object-contain m-0 p-0 block"
+                      className="w-32 h-32 object-contain"
                     />
                   </div>
                 );
@@ -154,12 +145,11 @@ export default function Wishlist() {
         </div>
       </div>
 
-      {/* AddToWishlist modal */}
       <AddToWishlist
         isOpen={showModal}
         onClose={() => {
           setShowModal(false);
-          fetchWishlist(); // refresh after closing
+          fetchWishlist();
         }}
       />
     </div>

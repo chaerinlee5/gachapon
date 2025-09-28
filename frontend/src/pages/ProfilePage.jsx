@@ -13,11 +13,9 @@ export default function ProfilePage() {
   const [collectionItems, setCollectionItems] = useState([]);
   const [showModal, setShowModal] = useState(false);
 
-  // 🔹 Define fetchCollection once, reuse it
   const fetchCollection = useCallback(async () => {
     if (!user) return;
 
-    console.log("Fetching collection for:", user.id);
     const { data, error } = await supabase
       .from("user_items")
       .select(`
@@ -40,7 +38,6 @@ export default function ProfilePage() {
     }
   }, [user]);
 
-  // Fetch profile
   useEffect(() => {
     if (!user) return;
 
@@ -58,16 +55,17 @@ export default function ProfilePage() {
       });
   }, [user]);
 
-  // Fetch collection initially
   useEffect(() => {
     fetchCollection();
   }, [fetchCollection]);
+
+  const base = import.meta.env.BASE_URL;
 
   return (
     <div className="min-h-screen bg-[#F3F4F6] text-gray-900">
       <div className="mx-auto max-w-6xl px-4 pb-5">
         <div className="relative">
-          {/* Left sidebar */}
+          {/* Sidebar */}
           <aside className="absolute left-4 top-6 flex flex-col items-center gap-5 z-30">
             <div className="relative">
               <ProfileImage />
@@ -95,30 +93,29 @@ export default function ProfilePage() {
             <LogoutButton />
           </aside>
 
-          {/* Page title */}
+          {/* Title */}
           <div className="relative w-full max-w-4xl mx-auto z-40">
             <div className="flex items-center justify-center gap-1">
-              <img src="/images/Star.png" alt="stars" className="h-[120px]" />
+              <img src={`${base}images/Star.png`} alt="stars" className="h-[120px]" />
               <h2 className="text-center text-xl md:text-2xl font-semibold">
                 collection
               </h2>
-              <img src="/images/Star frog.png" alt="frog" className="h-[120px]" />
+              <img src={`${base}images/Star frog.png`} alt="frog" className="h-[120px]" />
             </div>
           </div>
 
-          {/* Shelf area */}
+          {/* Shelf */}
           <div className="relative z-0 -mt-48 flex justify-center">
             <img
-              src="/images/Shelf.png"
+              src={`${base}images/Shelf.png`}
               alt="wooden shelf"
               className="w-[900px] max-w-full relative pointer-events-none z-0"
             />
-
             <div className="absolute inset-0 px-56 py-70 grid grid-cols-4">
               {collectionItems.map((c) => {
                 const item = c.item;
                 const key = item.image_key.replace(".png", "");
-                const imgSrc = itemImageMap[key] || "/images/fallback.png";
+                const imgSrc = itemImageMap[key] || `${base}images/fallback.png`;
                 return (
                   <div key={c.id} className="flex flex-col items-center">
                     <img
@@ -134,12 +131,11 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      {/* AddToCollection modal */}
       <AddToCollection
         isOpen={showModal}
         onClose={() => {
           setShowModal(false);
-          fetchCollection(); // 🔹 refresh after modal closes
+          fetchCollection();
         }}
       />
     </div>
